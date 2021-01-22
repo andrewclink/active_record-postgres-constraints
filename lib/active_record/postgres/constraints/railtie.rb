@@ -9,7 +9,7 @@ if defined?(::Rails::Railtie)
             engine = self
             ActiveSupport.on_load(:active_record) do
               AR_CAS = ::ActiveRecord::ConnectionAdapters
-
+              
               engine.apply_patch! if engine.pg?
             end
           end
@@ -28,7 +28,7 @@ if defined?(::Rails::Railtie)
 
           def pg?
             config = ActiveRecord::Base.connection_config
-            return true if config && 'postgresql' == config[:adapter]
+            return true if config && ['postgresql', 'postgis'].include?(config[:adapter])
 
             Rails.logger.warn do
               'Not applying Postgres Constraints patches to ActiveRecord ' \
